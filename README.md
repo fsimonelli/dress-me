@@ -22,7 +22,10 @@ deactivate
 Una vez activado el entorno virtual, instalar las dependencias necesarias.
 
 ```bash
-pip install librería_solicitada
+pip install "fastapi[standard]"
+pip install openai
+pip install qdrant_client
+pip install fastembed
 ```
 
 Para ejecutar la API, usar el siguiente comando:
