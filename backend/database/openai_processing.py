@@ -1,8 +1,9 @@
+from queries.get_all_items import get_all_items
+from queries.update_batch import update_batch
 from openai import OpenAI, RateLimitError
 import base64
 from dotenv import load_dotenv
 import os
-import json
 from tenacity import (
     retry,
     stop_after_attempt,
@@ -41,35 +42,31 @@ def get_description(item, base64_image):
     )
     return response.choices[0].message.content
 
-with open("polyvore_data/items.json") as f:
-    items = json.load(f)
-    
+items = get_all_items(processed=False)
+batch = []
+
 for i, item in enumerate(items):
     try:
-        if (item['description']):
-            continue
-        
-        image = open(f"polyvore_data/images/{item['id']}.jpg", "rb").read()
+        image = open(f"data/images/{item['outfit_id']}/{item['item_idx']}.jpg", "rb").read()
         base64_image = base64.b64encode(image).decode("utf-8")
 
         description = get_description(item, base64_image)
         item['description'] = description
+        batch.append(item)
         
         if i % 10 == 0:
-            with open('polyvore_data/items.json', 'w') as f:
-                json.dump(items, f, indent=4)
-            print(f"Processed {i} items, saved to file.")
+            update_batch(batch)
+            batch = []
+            print(f"Processed {i} items, saved to database.")
                 
-        print(f"Processed item {item['id']}")
+        print(f"Processed item {item['outfit_id']}/{item['item_idx']}")
         
     except Exception as e:
-        print(f"Error processing item {item['id']}, Error: {e}")
+        print(f"Error processing item {item['outfit_id']}/{item['item_idx']}, Error: {e}")
         continue
     
     except RateLimitError as e:
-        print(f"Rate limit error for item {item['id']}, Error: {e}")
+        print(f"Rate limit error for item {item['outfit_id']}/{item['item_idx']}, Error: {e}")
         continue
     
-with open('polyvore_data/items.json', 'w') as f:
-    json.dump(items, f, indent=4)
         
