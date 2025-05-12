@@ -4,6 +4,7 @@ import base64
 from dotenv import load_dotenv
 import os
 import core.qdrant.query as qdrant_query
+from database.queries.get_complementing_items import get_complementing_items
 
 load_dotenv()
 
@@ -36,5 +37,9 @@ async def upload_item(file: UploadFile):
         ]
     )
     
-    return qdrant_query.get_items(response.choices[0].message.content)
+    suggestions = qdrant_query.get_items(response.choices[0].message.content)
+    [outfit_id, item_idx] = suggestions.points[0].payload["id"].split('/')
+
+    res = get_complementing_items(outfit_id, item_idx)
+    return [res, suggestions]
     
