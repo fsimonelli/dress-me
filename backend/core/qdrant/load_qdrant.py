@@ -3,12 +3,8 @@ from dotenv import load_dotenv
 import os
 from qdrant_client.models import Distance, VectorParams, PointStruct
 from fastembed import TextEmbedding
-import json
-
+from database.queries.get_all_items import get_all_items
 embedding_model = TextEmbedding()
-
-with open("data/polyvore_data/items.json", "r", encoding="utf-8") as f:
-    items = json.load(f)
 
 load_dotenv()
 
@@ -17,6 +13,7 @@ qdrant_client = QdrantClient(
     api_key=os.getenv("QDRANT_API_KEY"),
 )
 
+items = get_all_items(processed=True)
 data = [item['description'] for item in items]
 embeddings = list(embedding_model.embed(data))
 vector_size = len(embeddings[0])
@@ -34,18 +31,18 @@ for item, embedding in zip(items, embeddings):
             id=i,
             vector=embedding,
             payload={
-                "id": item['id'],
+                "outfit_id": item['outfit_id'],
+                "item_idx": item['item_idx'],
                 "keywords": item['keywords'],
                 "category": item['category'],
             },
         )
     )
     i += 1
-    if (i % 100 == 0):
+    if (i % 2 == 0):
         qdrant_client.upsert(collection_name="item-embeddings", points=points)
-        if (i % 100 == 0):
-            print(f"Inserted {i} items into Qdrant")
-        points = []
+        print(f"Inserted {i} items into Qdrant")
+        points = [] 
 
 
 

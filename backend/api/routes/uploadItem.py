@@ -38,7 +38,7 @@ async def upload_item(file: UploadFile):
     )
     
     suggestions = qdrant_query.get_items(response.choices[0].message.content)
-    [outfit_id, item_idx] = suggestions.points[0].payload["id"].split('/')
+    [outfit_id, item_idx] = [suggestions.points[0].payload["outfit_id"], suggestions.points[0].payload["item_idx"]]
 
     res = get_complementing_items(outfit_id, item_idx)
     return [res, suggestions]
