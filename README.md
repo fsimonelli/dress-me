@@ -26,6 +26,8 @@ pip install "fastapi[standard]"
 pip install openai
 pip install qdrant_client
 pip install fastembed
+pip install unidecode
+pip install tenactiy
 ```
 
 Para ejecutar la API, usar el siguiente comando:
@@ -38,4 +40,12 @@ Para que el proyecto funcione, deben estar ingresadas las API keys necesarias en
 
 ```bash
 cp .env.example .env
+```
+
+Descargar imagenes del dataset:
+
+```bash
+#!/bin/bash
+curl -L -o /data/polyvore_data/
+  https://www.kaggle.com/api/v1/datasets/download/dnepozitek/maryland-polyvore-images
 ```

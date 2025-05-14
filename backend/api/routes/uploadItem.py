@@ -3,6 +3,8 @@ from openai import OpenAI
 import base64
 from dotenv import load_dotenv
 import os
+import core.qdrant.query as qdrant_query
+from database.queries.get_complementing_items import get_complementing_items
 
 load_dotenv()
 
@@ -22,7 +24,7 @@ async def upload_item(file: UploadFile):
                 "content": [
                     {
                         "type": "text",
-                        "text": "Only output an array describing this clothing/item image in keywords, concerning type of item, color, material, etc."
+                        "text": "Describe the item shown in the image, minimizing the use of stopwords. Do it in a single line, with no special characters. Describe its color, pattern, material, type, and any other relevant details."
                     },
                     {
                         "type": "image_url",
@@ -35,8 +37,9 @@ async def upload_item(file: UploadFile):
         ]
     )
     
-    
-    
-    
+    suggestions = qdrant_query.get_items(response.choices[0].message.content)
+    [outfit_id, item_idx] = [suggestions.points[0].payload["outfit_id"], suggestions.points[0].payload["item_idx"]]
 
-    return response.choices[0].message.content
+    res = get_complementing_items(outfit_id, item_idx)
+    return [res, suggestions]
+    
