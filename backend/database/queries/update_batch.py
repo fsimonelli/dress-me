@@ -1,4 +1,4 @@
-from supabase_client import supabase
+from backend.database.supabase_client import supabase
 
 def update_batch(batch):
     response = (

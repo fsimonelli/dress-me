@@ -1,4 +1,4 @@
-from queries.get_all_items import get_all_items
+from backend.database.queries.get_selected_items import get_selected_items
 from queries.update_batch import update_batch
 from openai import OpenAI, RateLimitError
 import base64
@@ -42,7 +42,7 @@ def get_description(item, base64_image):
     )
     return response.choices[0].message.content
 
-items = get_all_items(processed=False)
+items = get_selected_items(processed=False)
 batch = []
 
 for i, item in enumerate(items):

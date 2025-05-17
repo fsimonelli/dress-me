@@ -24,5 +24,14 @@ def get_items(description):
     )
     
     return query
+
+def get_items_by_embedding(embedding):
+    query = qdrant_client.query_points(
+        collection_name="item-image-embeddings",
+        query=embedding,
+        limit=5,
+    )
+    
+    return query
     
 
