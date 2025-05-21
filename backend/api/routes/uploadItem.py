@@ -14,7 +14,7 @@ embedding_model = ImageEmbedding(model_name="Qdrant/clip-ViT-B-32-vision")
 router = APIRouter()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-@router.post("/")
+@router.post("uploadItem/openai")
 async def upload_item(file: UploadFile):
     readFile = await file.read()
     base64_image = base64.b64encode(readFile).decode("utf-8")
@@ -46,7 +46,7 @@ async def upload_item(file: UploadFile):
     res = get_complementing_items(outfit_id, item_idx)
     return [res, suggestions]
 
-@router.post("/fastembed")
+@router.post("uploadItem/")
 async def upload_item(file: UploadFile):
     image = Image.open(file.file).convert("RGB")
     embedding = list(embedding_model.embed([image]))[0]
