@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from 'react';
 
 export default function ImageDropzone() {
   const [file, setFile] = useState(null);
@@ -8,7 +8,7 @@ export default function ImageDropzone() {
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && droppedFile.type.startsWith("image/")) {
+    if (droppedFile && droppedFile.type.startsWith('image/')) {
       setFile(droppedFile);
       setPreview(URL.createObjectURL(droppedFile));
     }
@@ -18,7 +18,7 @@ export default function ImageDropzone() {
 
   const handleFileSelect = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile.type.startsWith("image/")) {
+    if (selectedFile && selectedFile.type.startsWith('image/')) {
       setFile(selectedFile);
       setPreview(URL.createObjectURL(selectedFile));
     }
@@ -38,62 +38,62 @@ export default function ImageDropzone() {
   const handleUpload = () => {
     if (!file) return;
     const formData = new FormData();
-    formData.append("image", file);
-    fetch("/api/upload", {
-      method: "POST",
+    formData.append('image', file);
+    fetch('/api/upload', {
+      method: 'POST',
       body: formData,
     })
-      .then(() => console.log("Imagen subida"))
-      .catch((err) => console.error("Error al subir", err));
+      .then(() => console.log('Imagen subida'))
+      .catch((err) => console.error('Error al subir', err));
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto">
+    <div className='mx-auto max-w-md p-6'>
       {!preview && (
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
-          className="border-dashed border-4 border-gray-300 rounded-lg w-96 h-48 flex items-center justify-center cursor-pointer hover:bg-gray-100"
+          className='flex h-48 w-96 cursor-pointer items-center justify-center rounded-lg border-4 border-dashed border-gray-300 hover:bg-gray-100'
         >
-          <p className="text-gray-600 text-center">Arrastrá una imagen</p>
+          <p className='text-center text-gray-600'>Arrastrá una imagen</p>
         </div>
       )}
 
       {!preview && (
-        <div className="mt-4 flex justify-center">
+        <div className='mt-4 flex justify-center'>
           <button
             onClick={handleButtonClick}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
+            className='rounded bg-blue-600 px-4 py-2 text-white'
           >
             Seleccionar imagen
           </button>
           <input
-            type="file"
-            accept="image/*"
+            type='file'
+            accept='image/*'
             ref={fileInputRef}
             onChange={handleFileSelect}
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
           />
         </div>
       )}
 
       {preview && (
-        <div className="mt-4">
+        <div className='mt-4'>
           <img
             src={preview}
-            alt="Preview"
-            className="w-full max-h-64 object-contain rounded border"
+            alt='Preview'
+            className='max-h-64 w-full rounded border object-contain'
           />
-          <div className="flex justify-between mt-2">
+          <div className='mt-2 flex justify-between'>
             <button
               onClick={handleUpload}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
+              className='rounded bg-blue-600 px-4 py-2 text-white'
             >
               Subir
             </button>
             <button
               onClick={handleRemove}
-              className="px-4 py-2 bg-red-500 text-white rounded"
+              className='rounded bg-red-500 px-4 py-2 text-white'
             >
               Eliminar
             </button>
