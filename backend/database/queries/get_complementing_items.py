@@ -1,5 +1,6 @@
 from database.supabase_client import supabase
 
+
 def get_complementing_items(outfit_id, item_idx):
     response = (
         supabase.table("items")

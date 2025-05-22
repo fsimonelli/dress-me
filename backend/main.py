@@ -9,9 +9,11 @@ app = FastAPI(title="Dress Me", version="0.1.0")
 
 app.include_router(upload_router, prefix="/uploadItem", tags=["uploadItem"])
 
+
 @app.get("/")
 def root():
     return {"message": "Hello world"}
+
 
 @app.get("/get_image/{outfit_id}/{item_idx}")
 async def get_image(outfit_id, item_idx):
@@ -20,4 +22,3 @@ async def get_image(outfit_id, item_idx):
         return FileResponse(image_path)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Image not found")
-    
