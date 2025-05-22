@@ -1,11 +1,6 @@
 from qdrant_client import QdrantClient
 from dotenv import load_dotenv
 import os
-from qdrant_client.models import Distance, VectorParams, PointStruct
-from fastembed import TextEmbedding
-import json
-
-embedding_model = TextEmbedding()
 
 load_dotenv()
 
@@ -14,15 +9,22 @@ qdrant_client = QdrantClient(
     api_key=os.getenv("QDRANT_API_KEY"),
 )
 
-def get_items(description):
-    embedding = list(embedding_model.embed([description]))
-    
+
+def get_items_by_text_embedding(text_embedding):
     query = qdrant_client.query_points(
         collection_name="item-embeddings",
-        query=embedding[0],
+        query=text_embedding[0],
         limit=5,
     )
-    
-    return query
-    
 
+    return query
+
+
+def get_items_by_image_embedding(image_embedding):
+    query = qdrant_client.query_points(
+        collection_name="item-image-embeddings",
+        query=image_embedding,
+        limit=5,
+    )
+
+    return query

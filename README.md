@@ -28,6 +28,7 @@ pip install qdrant_client
 pip install fastembed
 pip install unidecode
 pip install tenactiy
+pip install black
 ```
 
 Para ejecutar la API, usar el siguiente comando:
