@@ -16,6 +16,19 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @router.post("/")
 async def upload_item(file: UploadFile):
+    image = Image.open(file.file).convert("RGB")
+    embedding = list(image_embedding_model.embed([image]))[0]
+    suggestions = qdrant_query.get_items_by_image_embedding(embedding)
+    [outfit_id, item_idx] = [
+        suggestions.points[0].payload["outfit_id"],
+        suggestions.points[0].payload["item_idx"],
+    ]
+
+    res = get_complementing_items(outfit_id, item_idx)
+    return [res, suggestions]
+
+@router.post("/openai")
+async def upload_item(file: UploadFile):
     readFile = await file.read()
     base64_image = base64.b64encode(readFile).decode("utf-8")
 
@@ -40,20 +53,6 @@ async def upload_item(file: UploadFile):
     description = response.choices[0].message.content
     embedding = list(text_embedding_model.embed([description]))
     suggestions = qdrant_query.get_items_by_text_embedding(embedding)
-    [outfit_id, item_idx] = [
-        suggestions.points[0].payload["outfit_id"],
-        suggestions.points[0].payload["item_idx"],
-    ]
-
-    res = get_complementing_items(outfit_id, item_idx)
-    return [res, suggestions]
-
-
-@router.post("/fastembed")
-async def upload_item(file: UploadFile):
-    image = Image.open(file.file).convert("RGB")
-    embedding = list(image_embedding_model.embed([image]))[0]
-    suggestions = qdrant_query.get_items_by_image_embedding(embedding)
     [outfit_id, item_idx] = [
         suggestions.points[0].payload["outfit_id"],
         suggestions.points[0].payload["item_idx"],
