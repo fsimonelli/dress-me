@@ -1,0 +1,10 @@
+fastapi[standard]
+openai
+qdrant_client
+fastembed
+unidecode
+tenacity
+selenium
+webdriver-manager
+supabase
+supabase-python
