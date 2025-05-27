@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class ItemResponseDTO(BaseModel):
+class ItemDTO(BaseModel):
     outfit_id: int
     item_idx: int
     keywords: str
