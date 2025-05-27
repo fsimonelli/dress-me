@@ -1,13 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
-from pathlib import Path
 from services.image_service import get_image_path
 
-from api import upload_router
+from api import upload_router, recommendation_router
 
 app = FastAPI(title="Dress Me", version="0.1.0")
 
 app.include_router(upload_router, prefix="/uploadItem", tags=["uploadItem"])
+
+app.include_router(recommendation_router, prefix="/getRecommendation", tags=["getRecommendation"])
 
 
 @app.get("/")
