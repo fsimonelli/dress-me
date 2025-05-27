@@ -29,6 +29,8 @@ pip install fastembed
 pip install unidecode
 pip install tenacity
 pip install black
+pip install selenium
+pip install webdriver-manager
 ```
 
 Para ejecutar la API, usar el siguiente comando:
