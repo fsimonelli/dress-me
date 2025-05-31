@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from services.image_service import get_image_path
+from fastapi.middleware.cors import CORSMiddleware
 
 from api import upload_router, recommendation_router
 
@@ -10,6 +11,19 @@ app.include_router(upload_router, prefix="/uploadItem", tags=["uploadItem"])
 
 app.include_router(recommendation_router, prefix="/getRecommendation", tags=["getRecommendation"])
 
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
