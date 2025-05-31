@@ -3,3 +3,4 @@ __pycache__
 .env
 images
 maryland-polyvore-images.zip
+qdrant_data
