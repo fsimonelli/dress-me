@@ -27,7 +27,7 @@ pip install openai
 pip install qdrant_client
 pip install fastembed
 pip install unidecode
-pip install tenactiy
+pip install tenacity
 pip install black
 ```
 
