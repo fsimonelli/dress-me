@@ -1,11 +1,13 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ItemDTO from '../types/ItemDTO';
 import Button from './ui/Button';
 
 export default function ImageUploader() {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -60,48 +62,48 @@ export default function ImageUploader() {
       console.log('Suggested Outfit:', suggestedOutfit);
       console.log('Similar Items:', similarItems);
       localStorage.setItem('similarItems', JSON.stringify(similarItems));
+      navigate('/recommendedOutfit');
     } catch (error) {
       console.error('Error uploading file:', error);
     }
   }
 
   return (
-    <div className='mx-auto max-w-md p-6'>
+    <div className='mt-10 flex flex-col items-center space-y-6'>
       {!preview && (
-        <div
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          className='flex h-48 w-96 cursor-pointer items-center justify-center rounded-lg border-4 border-dashed border-gray-300 hover:bg-gray-100'
-        >
-          <p className='text-center text-gray-600'>Arrastrá una imagen</p>
-        </div>
-      )}
-
-      {!preview && (
-        <div className='mt-4 flex justify-center'>
-          <Button text='Seleccionar imagen' onClick={handleButtonClick} />
-          <input
-            type='file'
-            accept='image/*'
-            ref={fileInputRef}
-            onChange={handleFileSelect}
-            style={{ display: 'none' }}
-          />
-        </div>
+        <>
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            className='flex h-[250px] w-[400px] items-center justify-center rounded-lg border-2 border-dashed border-gray-400 bg-white shadow-md'
+          >
+            <p className='text-center text-gray-600'>Arrastrá una imagen</p>
+          </div>
+          <div className='mt-6'>
+            <Button text='Seleccionar imagen' onClick={handleButtonClick} />
+            <input
+              type='file'
+              accept='image/*'
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              style={{ display: 'none' }}
+            />
+          </div>
+        </>
       )}
 
       {preview && (
-        <div className='mt-4'>
+        <>
           <img
             src={preview}
             alt='Preview'
-            className='max-h-64 w-full rounded border object-contain'
+            className='mb-6 max-h-[300px] max-w-[400px] rounded border object-contain'
           />
-          <div className='mt-2 flex justify-between'>
+          <div className='mt-6 flex justify-center gap-6 p-6'>
             <Button text='Subir' onClick={handleUpload} />
             <Button text='Eliminar' onClick={handleRemove} />
           </div>
-        </div>
+        </>
       )}
     </div>
   );
