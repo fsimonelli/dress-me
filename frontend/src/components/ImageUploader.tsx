@@ -11,7 +11,6 @@ export default function ImageUploader() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
@@ -41,11 +40,11 @@ export default function ImageUploader() {
     setFile(null);
     setPreview(null);
   };
-  
+
   const handleClick = () => {
-    handleUpload();   
-    setIsLoading(true); 
-  } 
+    handleUpload();
+    setIsLoading(true);
+  };
 
   async function handleUpload() {
     if (!file) return;
@@ -60,40 +59,36 @@ export default function ImageUploader() {
       });
 
       const response = await res.json();
-
-      const recommended_outfit: ItemDTO[] = response[0].map((qdrantItem) => { // Esto no seria el suggested item?
-        const outfit_id = qdrantItem['outfit_id'];
-        const item_idx = qdrantItem['item_idx'];
-
+      const recommended_outfit: ItemDTO[] = response[0].map((outfit) => {
         return {
-          outfit_id,
-          item_idx,
-          keywords: qdrantItem['keywords'],
-          category: qdrantItem['category'],
-          imageUrl: `http://127.0.0.1:8000/get_image/${outfit_id}/${item_idx}`,
+          outfit_id: outfit['outfit_id'],
+          item_idx: outfit['item_idx'],
+          keywords: outfit['keywords'],
+          category: outfit['category'],
+          imageUrl: `http://127.0.0.1:8000/get_image/${outfit['outfit_id']}/${outfit['item_idx']}`,
         };
       });
 
-      const suggestedOutfit: ItemDTO[] = response[0].map((item: any) => ({ // Aca deberia modificarlo para poder obtener este pero no tengo idea como hacerlo T_T
-        ...item,
-        imageUrl: `http://127.0.0.1:8000/getRecommendation/${item.outfit_id}/${item.item_idx}`,
+      const similarItems: ItemDTO[] = response[1]['points'].map((item) => ({
+        outfit_id: item['payload']['outfit_id'],
+        item_idx: item['payload']['item_idx'],
+        keywords: item['payload']['keywords'],
+        category: item['payload']['category'],
+        imageUrl: `http://127.0.0.1:8000/getRecommendation/${item['payload']['outfit_id']}/${item['payload']['item_idx']}`,
       }));
 
-      console.log('Suggested Outfit:', suggestedOutfit);
-      console.log('Similar Items:', recommended_outfit); 
-      localStorage.setItem('SimilarItems', JSON.stringify(recommended_outfit));
-      localStorage.setItem('SuggestedOutfit', JSON.stringify(suggestedOutfit));
-/*linea 83 y 84 carecen de coherencia para mi irian en ambas similar items porque lo del qdrant item antes era esto, pero lo cambiamos a que acceda a la pos 0 del arreglo para que de
- de bien, aunque para mi habria que ajustarlo para que lo acceda desde el suggestedOutfit cosa que probe pero no pude, todo esto si queres que quede lindo y funcional, ahora 
- esta funcional nomas*/
+      localStorage.setItem(
+        'SuggestedOutfit',
+        JSON.stringify(recommended_outfit),
+      );
+      localStorage.setItem('SimilarItems', JSON.stringify(similarItems));
       navigate('/recommendedOutfit');
-} catch (error) {
+    } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
       setIsLoading(false);
     }
   }
-  
 
   return (
     <div className='mt-10 flex flex-col items-center space-y-6'>
@@ -121,14 +116,14 @@ export default function ImageUploader() {
 
       {preview && (
         <>
-          <div className="relative rounded border overflow-hidden shadow-md bg-white flex items-center justify-center">
+          <div className='relative flex items-center justify-center overflow-hidden rounded border bg-white shadow-md'>
             <img
               src={preview}
-              alt="Preview"
-              className="object-contain max-w-[400px] max-h-[300px]"
+              alt='Preview'
+              className='max-h-[300px] max-w-[400px] object-contain'
             />
             {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-10">
+              <div className='absolute inset-0 z-10 flex items-center justify-center bg-white/70'>
                 <LoadingIndicator />
               </div>
             )}
