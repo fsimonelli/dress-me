@@ -6,7 +6,7 @@ load_dotenv()
 
 router = APIRouter()
 
-@router.post("/")
+@router.get("/{outfit_id}/{item_idx}")
 async def get_recommendation(outfit_id: int, item_idx: int):
     recommendations = get_complementing_items(outfit_id, item_idx)
     return recommendations
