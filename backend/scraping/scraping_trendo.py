@@ -16,7 +16,7 @@ import urllib.parse
 # =========================================================================
 # Initial configuration
 # =========================================================================
-max_products = 10  # Maximum number of products to extract
+max_products = 10  # Default maximum number of products to extract
 
 options = Options()
 options.add_argument('--headless')
@@ -51,7 +51,14 @@ def scrape_trendo(search_terms, n: int = 10):
     try:
         search_url = "https://trendo.uy/buscar?q=" + urllib.parse.quote(search_terms)
         driver.get(search_url)
-        time.sleep(5)
+        try:
+            WebDriverWait(driver, 20).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "div.grid > div.relative"))
+            )
+        except TimeoutException:
+            print("Timeout waiting for page to load")
+            driver.quit()
+            return {}
 
         last_height = driver.execute_script("return document.body.scrollHeight")
         scroll_attempts = 0
