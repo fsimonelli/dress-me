@@ -12,7 +12,7 @@ import RecommendedOutfit from './pages/recommendedOutfit.tsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path='/home' element={<Home />} />
+      <Route path='/' element={<Home />} />
       <Route path='/recommendedOutfit' element={<RecommendedOutfit />} />
     </>,
   ),

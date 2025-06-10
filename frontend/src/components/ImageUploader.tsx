@@ -74,14 +74,17 @@ export default function ImageUploader() {
         item_idx: item['payload']['item_idx'],
         keywords: item['payload']['keywords'],
         category: item['payload']['category'],
-        imageUrl: `http://127.0.0.1:8000/getRecommendation/${item['payload']['outfit_id']}/${item['payload']['item_idx']}`,
       }));
+
+      localStorage.setItem('Image', preview || '');
 
       localStorage.setItem(
         'SuggestedOutfit',
         JSON.stringify(recommended_outfit),
       );
       localStorage.setItem('SimilarItems', JSON.stringify(similarItems));
+      localStorage.setItem('CurrentSimilarItemIndex', '0');
+      localStorage.setItem('Count', similarItems.length.toString());
       navigate('/recommendedOutfit');
     } catch (error) {
       console.error('Error uploading file:', error);
