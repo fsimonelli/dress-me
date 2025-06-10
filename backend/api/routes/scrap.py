@@ -12,8 +12,14 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import time
 import json
 import urllib.parse
-from fastapi import APIRouter, Query
-from typing import Union, List
+from fastapi import APIRouter, UploadFile
+from openai import OpenAI
+import base64
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # =========================================================================
 # Initial configuration
@@ -139,11 +145,39 @@ def scrap_trendo(search_terms, n: int = 10):
     finally:
         driver.quit()
 
-@router.get("/scrap")
-def scrap_endpoint(search_terms: Union[str, List[str]] = Query(..., description="Palabras clave de búsqueda"), n: int = 10):
+@router.post("/scrap")
+async def scrap_endpoint(file: UploadFile, n: int = 10):
     """
-    Endpoint para scrapear productos de trendo.uy
+    Endpoint para scrapear productos de trendo.uy basado en una imagen subida
     """
+    # Leer la imagen y convertirla a base64
+    readFile = await file.read()
+    base64_image = base64.b64encode(readFile).decode("utf-8")
+    
+    # Usar OpenAI para generar términos de búsqueda basados en la imagen
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Analiza esta imagen de ropa y genera exactamente 4 palabras en español para buscar productos similares. Incluye: tipo de prenda, color principal, material y estilo. Ejemplo: 'sueter azul algodon casual'. Solo devuelve las 4 palabras separadas por espacios, sin puntuación ni palabras adicionales. Usa vocabulario uruguayo: pantalón de jean=vaquero, sudadera con capucha=canguro, sudadera sin capucha=buzo, camiseta=remera, vestido de baño=enteriza, malla de dos piezas=bikini, pantalón corto=short/bermuda, zapatillas deportivas=championes, chanclas=ojotas, calcetines=medias, pantimedias=cancanes, abrigo=campera/tapado, chaqueta=campera, pulover=buzo.",
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
+                    },
+                ],
+            }
+        ],
+    )
+    
+    # Extraer los términos de búsqueda generados por OpenAI
+    search_terms = response.choices[0].message.content.strip()
+    print(f"Generated search terms: {search_terms}")
+    # Realizar el scraping con los términos generados
     return scrap_trendo(search_terms, n)
 
 # =========================================================================
