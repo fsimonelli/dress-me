@@ -4,7 +4,7 @@ import '../../index.css';
 export default function Header() {
   return (
     <h1 className='header'>
-      <Link to='/home' className='no-style-link'>
+      <Link to='/' className='no-style-link'>
         Dress Me
       </Link>
     </h1>

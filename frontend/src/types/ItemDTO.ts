@@ -3,5 +3,4 @@ export default interface ItemDTO {
   item_idx: number;
   keywords: string;
   category: string;
-  description?: string;
 }

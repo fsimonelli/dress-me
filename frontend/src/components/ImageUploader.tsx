@@ -2,12 +2,14 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ItemDTO from '../types/ItemDTO';
 import Button from './ui/Button';
+import LoadingIndicator from './ui/LoadingIndicator';
 
 export default function ImageUploader() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -39,32 +41,55 @@ export default function ImageUploader() {
     setPreview(null);
   };
 
+  const handleClick = () => {
+    handleUpload();
+    setIsLoading(true);
+  };
+
   async function handleUpload() {
     if (!file) return;
+
     const formData = new FormData();
     formData.append('file', file);
+
     try {
-      const response = await fetch('http://localhost:8000/uploadItem/', {
+      const res = await fetch('http://localhost:8000/uploadItem/', {
         method: 'POST',
         body: formData,
-      }).then((res) => res.json());
+      });
 
-      const similarItems: ItemDTO[] = response[1]['points'].map(
-        (qdrantItem) => ({
-          outfit_id: qdrantItem['payload']['outfit_id'],
-          item_idx: qdrantItem['payload']['item_idx'],
-          keywords: qdrantItem['payload']['keywords'],
-          category: qdrantItem['payload']['category'],
-        }),
+      const response = await res.json();
+      const recommended_outfit: ItemDTO[] = response[0].map((outfit) => {
+        return {
+          outfit_id: outfit['outfit_id'],
+          item_idx: outfit['item_idx'],
+          keywords: outfit['keywords'],
+          category: outfit['category'],
+          imageUrl: `http://127.0.0.1:8000/get_image/${outfit['outfit_id']}/${outfit['item_idx']}`,
+        };
+      });
+
+      const similarItems: ItemDTO[] = response[1]['points'].map((item) => ({
+        outfit_id: item['payload']['outfit_id'],
+        item_idx: item['payload']['item_idx'],
+        keywords: item['payload']['keywords'],
+        category: item['payload']['category'],
+      }));
+
+      localStorage.setItem('Image', preview || '');
+
+      localStorage.setItem(
+        'SuggestedOutfit',
+        JSON.stringify(recommended_outfit),
       );
-
-      const suggestedOutfit: ItemDTO[] = response[0];
-      console.log('Suggested Outfit:', suggestedOutfit);
-      console.log('Similar Items:', similarItems);
-      localStorage.setItem('similarItems', JSON.stringify(similarItems));
+      localStorage.setItem('SimilarItems', JSON.stringify(similarItems));
+      localStorage.setItem('CurrentSimilarItemIndex', '0');
+      localStorage.setItem('Count', similarItems.length.toString());
       navigate('/recommendedOutfit');
     } catch (error) {
       console.error('Error uploading file:', error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -94,13 +119,20 @@ export default function ImageUploader() {
 
       {preview && (
         <>
-          <img
-            src={preview}
-            alt='Preview'
-            className='mb-6 max-h-[300px] max-w-[400px] rounded border object-contain'
-          />
+          <div className='relative flex items-center justify-center overflow-hidden rounded border bg-white shadow-md'>
+            <img
+              src={preview}
+              alt='Preview'
+              className='max-h-[300px] max-w-[400px] object-contain'
+            />
+            {isLoading && (
+              <div className='absolute inset-0 z-10 flex items-center justify-center bg-white/70'>
+                <LoadingIndicator />
+              </div>
+            )}
+          </div>
           <div className='mt-6 flex justify-center gap-6 p-6'>
-            <Button text='Subir' onClick={handleUpload} />
+            <Button text='Subir' onClick={handleClick} />
             <Button text='Eliminar' onClick={handleRemove} />
           </div>
         </>
