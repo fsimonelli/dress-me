@@ -176,7 +176,6 @@ async def scrap_endpoint(file: UploadFile, n: int = 10):
     
     # Extraer los términos de búsqueda generados por OpenAI
     search_terms = response.choices[0].message.content.strip()
-    print(f"Generated search terms: {search_terms}")
     # Realizar el scraping con los términos generados
     return scrap_trendo(search_terms, n)
 
