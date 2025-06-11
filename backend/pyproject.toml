@@ -1,0 +1,16 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.115.12",
+    "fastembed>=0.7.0",
+    "openai>=1.86.0",
+    "qdrant-client>=1.14.2",
+    "selenium>=4.33.0",
+    "supabase>=2.15.3",
+    "tenacity>=9.1.2",
+    "unidecode>=1.4.0",
+    "webdriver-manager>=4.0.2",
+]
