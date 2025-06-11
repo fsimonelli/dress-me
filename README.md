@@ -52,3 +52,11 @@ Descargar imagenes del dataset:
 curl -L -o /data/polyvore_data/
   https://www.kaggle.com/api/v1/datasets/download/dnepozitek/maryland-polyvore-images
 ```
+
+Inicializar uv:
+```bash
+crear .env
+cd backend
+pip install uv
+uv sync
+```
