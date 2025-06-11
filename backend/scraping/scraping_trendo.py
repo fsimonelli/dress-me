@@ -49,7 +49,7 @@ def scrape_trendo(search_terms, n: int = 10):
         return {}
 
     try:
-        search_url = "https://trendo.uy/buscar?q=" + urllib.parse.quote(search_terms)
+        search_url = "https://trendo.uy/buscar?q=" + urllib.parse.quote(search_terms) + '&genero=Mujer'
         driver.get(search_url)
         try:
             WebDriverWait(driver, 20).until(

@@ -8,7 +8,7 @@ from api import upload_router, recommendation_router, scrap_trendo
 app = FastAPI(title="Dress Me", version="0.1.0")
 
 app.include_router(upload_router, prefix="/uploadItem", tags=["uploadItem"])
-app.include_router(scrap_trendo, prefix="/scrap", tags=["scrap_trendo"])
+app.include_router(scrap_trendo, tags=["scrap_trendo"])
 
 app.include_router(recommendation_router, prefix="/getRecommendation", tags=["getRecommendation"])
 
