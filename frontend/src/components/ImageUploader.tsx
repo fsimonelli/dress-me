@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ItemDTO from '../types/ItemDTO';
 import Button from './ui/Button';
@@ -76,15 +76,15 @@ export default function ImageUploader() {
         category: item['payload']['category'],
       }));
 
-      localStorage.setItem('Image', preview || '');
+      sessionStorage.setItem('Image', preview || '');
 
-      localStorage.setItem(
+      sessionStorage.setItem(
         'SuggestedOutfit',
         JSON.stringify(recommended_outfit),
       );
-      localStorage.setItem('SimilarItems', JSON.stringify(similarItems));
-      localStorage.setItem('CurrentSimilarItemIndex', '0');
-      localStorage.setItem('Count', similarItems.length.toString());
+      sessionStorage.setItem('SimilarItems', JSON.stringify(similarItems));
+      sessionStorage.setItem('CurrentSimilarItemIndex', '0');
+      sessionStorage.setItem('Count', similarItems.length.toString());
       navigate('/recommendedOutfit');
     } catch (error) {
       console.error('Error uploading file:', error);

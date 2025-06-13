@@ -1,3 +1,4 @@
+import React from 'react';
 import Button from '../components/ui/Button';
 import Header from '../components/ui/Header';
 import ItemCard from '../components/ItemCard';
@@ -8,7 +9,7 @@ export default function ImageHolder() {
   const [items, setItems] = useState<ItemDTO[]>([]);
 
   useEffect(() => {
-    const storedItems = localStorage.getItem('SuggestedOutfit');
+    const storedItems = sessionStorage.getItem('SuggestedOutfit');
     if (storedItems) {
       try {
         const parsedItems: ItemDTO[] = JSON.parse(storedItems);
@@ -20,17 +21,17 @@ export default function ImageHolder() {
   }, []);
 
   async function handleNextSuggestion() {
-    const numberOfItems = Number(localStorage.getItem('Count'));
-    let currentIndex = Number(localStorage.getItem('CurrentSimilarItemIndex'));
+    const numberOfItems = Number(sessionStorage.getItem('Count'));
+    let currentIndex = Number(sessionStorage.getItem('CurrentSimilarItemIndex'));
 
     if (currentIndex >= numberOfItems - 1) {
-      localStorage.setItem('CurrentSimilarItemIndex', '0');
+      sessionStorage.setItem('CurrentSimilarItemIndex', '0');
       currentIndex = 0;
     } else {
       currentIndex++;
-      localStorage.setItem('CurrentSimilarItemIndex', currentIndex.toString());
+      sessionStorage.setItem('CurrentSimilarItemIndex', currentIndex.toString());
     }
-    const similarItems = localStorage.getItem('SimilarItems');
+    const similarItems = sessionStorage.getItem('SimilarItems');
     const newItem: ItemDTO = similarItems
       ? JSON.parse(similarItems)[currentIndex]
       : undefined;
@@ -44,7 +45,7 @@ export default function ImageHolder() {
 
       const response = await res.json();
 
-      localStorage.setItem('SuggestedOutfit', JSON.stringify(response));
+      sessionStorage.setItem('SuggestedOutfit', JSON.stringify(response));
       setItems(response);
     } catch (error) {
       console.error('Error fetching next suggestion:', error);
@@ -61,7 +62,7 @@ export default function ImageHolder() {
           onClick={handleNextSuggestion}
         />
         <img
-          src={localStorage.getItem('Image') || ''}
+          src={sessionStorage.getItem('Image') || ''}
           alt='Uploaded'
           className='h-96 w-72 rounded-lg border-2 border-gray-400 shadow-md'
         />
