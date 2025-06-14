@@ -4,12 +4,13 @@
 import json
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, UploadFile, Form
 from openai import OpenAI
 import base64
 from dotenv import load_dotenv
 import os
 from scraping.scraping_trendo import scrape_trendo
+
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -17,7 +18,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 router = APIRouter()
 
 @router.post("/scrap")
-async def scrap_endpoint(file: UploadFile, n: int = 10):
+async def scrap_endpoint(file: UploadFile, category: str = Form(...), n: int = 10):
     """
     Endpoint para scrapear productos de trendo.uy basado en una imagen subida
     """
@@ -34,7 +35,7 @@ async def scrap_endpoint(file: UploadFile, n: int = 10):
                 "content": [
                     {
                         "type": "text",
-                        "text": "Analiza esta imagen de ropa y genera exactamente 4 palabras en español para buscar productos similares. Incluye: tipo de prenda, color principal, material y estilo. Ejemplo: 'sueter azul algodon casual'. Solo devuelve las 4 palabras separadas por espacios, sin puntuación ni palabras adicionales. Usa vocabulario uruguayo: pantalón de jean=vaquero, sudadera con capucha=canguro, sudadera sin capucha=buzo, camiseta=remera, vestido de baño=enteriza, malla de dos piezas=bikini, pantalón corto=short/bermuda, zapatillas deportivas=championes, chanclas=ojotas, calcetines=medias, pantimedias=cancanes, abrigo=campera/tapado, chaqueta=campera, pulover=buzo."
+                        "text": f"Analiza esta imagen de ropa de categoría '{category}' y genera exactamente 4 palabras en español para buscar productos similares. Incluye: tipo de prenda, color principal, material y estilo. Ejemplo: 'sueter azul algodon casual'. Solo devuelve las 4 palabras separadas por espacios, sin puntuación ni palabras adicionales. Usa vocabulario uruguayo: pantalón de jean=vaquero, sudadera con capucha=canguro, sudadera sin capucha=buzo, camiseta=remera, vestido de baño=enteriza, malla de dos piezas=bikini, pantalón corto=short/bermuda, zapatillas deportivas=championes, chanclas=ojotas, calcetines=medias, pantimedias=cancanes, abrigo=campera/tapado, chaqueta=campera, pulover=buzo."
                     },
                     {
                         "type": "image_url",
