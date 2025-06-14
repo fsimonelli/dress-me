@@ -5,7 +5,7 @@ import ItemCard from '../components/ItemCard';
 import { useEffect, useState } from 'react';
 import ItemDTO from '../types/ItemDTO';
 
-export default function ImageHolder() {
+export default function RecommendedOutfit() {
   const [items, setItems] = useState<ItemDTO[]>([]);
 
   useEffect(() => {
@@ -22,14 +22,19 @@ export default function ImageHolder() {
 
   async function handleNextSuggestion() {
     const numberOfItems = Number(sessionStorage.getItem('Count'));
-    let currentIndex = Number(sessionStorage.getItem('CurrentSimilarItemIndex'));
+    let currentIndex = Number(
+      sessionStorage.getItem('CurrentSimilarItemIndex'),
+    );
 
     if (currentIndex >= numberOfItems - 1) {
       sessionStorage.setItem('CurrentSimilarItemIndex', '0');
       currentIndex = 0;
     } else {
       currentIndex++;
-      sessionStorage.setItem('CurrentSimilarItemIndex', currentIndex.toString());
+      sessionStorage.setItem(
+        'CurrentSimilarItemIndex',
+        currentIndex.toString(),
+      );
     }
     const similarItems = sessionStorage.getItem('SimilarItems');
     const newItem: ItemDTO = similarItems
