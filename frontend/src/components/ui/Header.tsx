@@ -1,12 +1,16 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../index.css';
 
 export default function Header() {
   return (
-    <h1 className='header'>
-      <Link to='/' className='no-style-link'>
-        Dress Me
-      </Link>
-    </h1>
+    <header className='header'>
+      <div className='header-content'>
+        <h1 className='w-full text-center'>
+          <Link to='/' className='no-style-link'>
+            Dress Me
+          </Link>
+        </h1>
+      </div>
+    </header>
   );
 }

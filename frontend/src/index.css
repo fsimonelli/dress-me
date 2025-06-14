@@ -55,11 +55,26 @@ button:focus-visible {
 }
 
 .header {
-  font-size: 2rem;
-  text-align: left;
-  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 1rem;
-  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
 .no-style-link {
