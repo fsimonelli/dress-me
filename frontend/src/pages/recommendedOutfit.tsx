@@ -62,7 +62,7 @@ export default function RecommendedOutfit() {
       <Header />
       <div className='flex flex-col items-center'>
         <Button
-          text='Next suggestion'
+          text='Siguiente sugerencia'
           className='m-8'
           onClick={handleNextSuggestion}
         />

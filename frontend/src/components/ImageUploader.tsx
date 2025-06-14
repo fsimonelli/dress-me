@@ -17,7 +17,7 @@ export default function ImageUploader() {
     e.preventDefault();
     setIsDragging(false);
     setError(null);
-    
+
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile) {
       if (droppedFile.type.startsWith('image/')) {
@@ -107,7 +107,10 @@ export default function ImageUploader() {
       }));
 
       sessionStorage.setItem('Image', preview || '');
-      sessionStorage.setItem('SuggestedOutfit', JSON.stringify(recommended_outfit));
+      sessionStorage.setItem(
+        'SuggestedOutfit',
+        JSON.stringify(recommended_outfit),
+      );
       sessionStorage.setItem('SimilarItems', JSON.stringify(similarItems));
       sessionStorage.setItem('CurrentSimilarItemIndex', '0');
       sessionStorage.setItem('Count', similarItems.length.toString());
@@ -138,28 +141,32 @@ export default function ImageUploader() {
               className={`mb-4 h-12 w-12 transition-colors duration-300 ${
                 isDragging ? 'text-blue-500' : 'text-gray-400'
               }`}
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 16"
+              aria-hidden='true'
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 20 16'
             >
               <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                stroke='currentColor'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2'
               />
             </svg>
-            <p className={`mb-2 text-sm font-medium transition-colors duration-300 ${
-              isDragging ? 'text-blue-500' : 'text-gray-500'
-            }`}>
+            <p
+              className={`mb-2 text-sm font-medium transition-colors duration-300 ${
+                isDragging ? 'text-blue-500' : 'text-gray-500'
+              }`}
+            >
               {isDragging ? 'Suelta la imagen aquí' : 'Arrastrá una imagen o'}
             </p>
-            <p className={`text-xs transition-colors duration-300 ${
-              isDragging ? 'text-blue-400' : 'text-gray-400'
-            }`}>
-              PNG, JPG o GIF (max. 10MB)
+            <p
+              className={`text-xs transition-colors duration-300 ${
+                isDragging ? 'text-blue-400' : 'text-gray-400'
+              }`}
+            >
+              PNG, JPG
             </p>
           </div>
           <div className='mt-6'>
@@ -194,14 +201,8 @@ export default function ImageUploader() {
             )}
           </div>
           <div className='mt-6 flex justify-center gap-6 p-6'>
-            <Button
-              text='Subir'
-              onClick={handleClick}
-            />
-            <Button
-              text='Eliminar'
-              onClick={handleRemove}
-            />
+            <Button text='Subir' onClick={handleClick} />
+            <Button text='Eliminar' onClick={handleRemove} />
           </div>
         </>
       )}
