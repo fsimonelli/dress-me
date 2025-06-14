@@ -35,6 +35,14 @@ def root():
 async def get_image(outfit_id, item_idx):
     try:
         image_path = await get_image_path(outfit_id, item_idx)
-        return FileResponse(image_path)
+        return FileResponse(
+            image_path,
+            media_type="image/jpeg",
+            headers={
+                "Access-Control-Allow-Origin": "http://localhost:5173",
+                "Access-Control-Allow-Methods": "GET",
+                "Access-Control-Allow-Headers": "*"
+            }
+        )
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Image not found")
