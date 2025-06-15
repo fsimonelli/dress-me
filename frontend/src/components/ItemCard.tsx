@@ -18,9 +18,7 @@ export default function ItemCard({ item }: ItemCardProps) {
     const fetchImage = async () => {
       const res = await fetch(imageUrl, {
         method: 'GET',
-        headers: {
-          Accept: 'image/jpeg',
-        },
+        cache: 'no-cache',
       });
       const blob = await res.blob();
       setItemImage(new File([blob], 'item.jpg'));
@@ -77,9 +75,9 @@ export default function ItemCard({ item }: ItemCardProps) {
       >
         {data && (
           <div className='grid grid-cols-2 gap-6'>
-            {data.map((trendo) => (
+            {data.map((trendo, index) => (
               <div
-                key={trendo.title}
+                key={index}
                 className='mb-4 flex flex-col items-center rounded-lg border bg-white p-3 shadow-sm'
               >
                 <div className='grid grid-cols-2'>
