@@ -35,7 +35,7 @@ async def scrap_endpoint(file: UploadFile, category: str = Form(...), n: int = 1
                 "content": [
                     {
                         "type": "text",
-                        "text": f"Analiza esta imagen de ropa de categoría '{category}' y genera exactamente 4 palabras en español para buscar productos similares. Incluye: tipo de prenda, color principal, material y estilo. Ejemplo: 'sueter azul algodon casual'. Solo devuelve las 4 palabras separadas por espacios, sin puntuación ni palabras adicionales. Usa vocabulario uruguayo: pantalón de jean=vaquero, sudadera con capucha=canguro, sudadera sin capucha=buzo, camiseta=remera, vestido de baño=enteriza, malla de dos piezas=bikini, pantalón corto=short/bermuda, zapatillas deportivas=championes, chanclas=ojotas, calcetines=medias, pantimedias=cancanes, abrigo=campera/tapado, chaqueta=campera, pulover=buzo."
+                        "text": f"Analiza esta imagen de ropa de categoría '{category}' y genera exactamente 4 palabras en español para buscar productos similares. Incluye: tipo de prenda, color principal, material y estilo. Ejemplo: 'sueter azul algodon casual'. Solo devuelve las 4 palabras separadas por espacios, sin puntuación ni palabras adicionales. Usa vocabulario uruguayo: pantalón de jean=vaquero, sudadera con capucha=canguro, sudadera sin capucha=buzo, camiseta=remera, vestido de baño=enteriza, malla de dos piezas=bikini, pantalón corto=short/bermuda, zapatillas deportivas=championes, chanclas=ojotas, calcetines=medias, pantimedias=cancanes, abrigo=campera/tapado, chaqueta=campera, pulover=buzo, falda=pollera."
                     },
                     {
                         "type": "image_url",

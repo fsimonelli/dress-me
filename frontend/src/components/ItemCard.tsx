@@ -4,6 +4,7 @@ import Button from './ui/Button';
 import ModalTrendo from './ModalTrendo';
 import TrendoDTO from '../types/TrendoDTO';
 import { ClipLoader } from 'react-spinners';
+import TrendoCard from './TrendoCard';
 
 interface ItemCardProps {
   isUploaded: boolean;
@@ -114,44 +115,7 @@ export default function ItemCard({ item, isUploaded }: ItemCardProps) {
             </h3>
             <div className='grid grid-cols-2 gap-6'>
               {data.map((trendo, index) => (
-                <div
-                  key={index}
-                  className='mb-4 flex flex-col items-center rounded-lg border bg-white p-3 shadow-sm'
-                >
-                  <div className='grid grid-cols-2'>
-                    <img
-                      src={trendo.image_url}
-                      alt={trendo.image_alt}
-                      className='mb-2 h-28 w-28 rounded border object-cover'
-                    />
-                    <div className='w-full flex-1 text-center'>
-                      <a
-                        href={trendo.link}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='block text-base font-semibold hover:text-blue-700'
-                      >
-                        {trendo.title}
-                      </a>
-                      <div className='text-sm text-gray-600'>
-                        {trendo.brand}
-                      </div>
-                      <div className='text-sm font-bold text-green-600'>
-                        {trendo.price}
-                      </div>
-                      {trendo.price_old && (
-                        <div className='text-xs text-gray-400 line-through'>
-                          {trendo.price_old}
-                        </div>
-                      )}
-                      {trendo.discount && (
-                        <div className='text-xs font-semibold text-red-500'>
-                          {trendo.discount}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <TrendoCard key={index} trendo={trendo} />
               ))}
             </div>
           </>
