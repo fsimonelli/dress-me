@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ItemDTO from '../types/ItemDTO';
+import PointDTO from '../types/PointDTO';
 import Button from './ui/Button';
 import { ClipLoader } from 'react-spinners';
 
@@ -99,11 +100,14 @@ export default function ImageUploader() {
         };
       });
 
-      const similarItems: ItemDTO[] = response[1]['points'].map((item) => ({
-        outfit_id: item['payload']['outfit_id'],
-        item_idx: item['payload']['item_idx'],
-        keywords: item['payload']['keywords'],
-        category: item['payload']['category'],
+      const similarItems: PointDTO[] = response[1]['points'].map((item) => ({
+        score: item['score'],
+        payload: {
+          outfit_id: item['payload']['outfit_id'],
+          item_idx: item['payload']['item_idx'],
+          keywords: item['payload']['keywords'],
+          category: item['payload']['category'],
+        },
       }));
 
       sessionStorage.setItem('Image', preview || '');
