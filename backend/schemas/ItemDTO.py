@@ -6,4 +6,3 @@ class ItemDTO(BaseModel):
     item_idx: int
     keywords: str
     category: str
-    description: str
