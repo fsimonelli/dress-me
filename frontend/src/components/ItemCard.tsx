@@ -3,46 +3,72 @@ import ItemDTO from '../types/ItemDTO';
 import Button from './ui/Button';
 import ModalTrendo from './ModalTrendo';
 import TrendoDTO from '../types/TrendoDTO';
+import { ClipLoader } from 'react-spinners';
+
 interface ItemCardProps {
-  item: ItemDTO;
+  isUploaded: boolean;
+  item?: ItemDTO;
 }
 
-export default function ItemCard({ item }: ItemCardProps) {
-  const imageUrl = `http://localhost:8000/get_image/${item.outfit_id}/${item.item_idx}`;
+export default function ItemCard({ item, isUploaded }: ItemCardProps) {
+  const imageUrl = `http://localhost:8000/get_image/${item?.outfit_id}/${item?.item_idx}`;
 
   const [itemImage, setItemImage] = useState<File | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [data, setData] = useState<TrendoDTO[]>([]);
+  const [generatedTerms, setGeneratedTerms] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchImage = async () => {
-      const res = await fetch(imageUrl, {
-        method: 'GET',
-        cache: 'no-cache',
-      });
-      const blob = await res.blob();
-      setItemImage(new File([blob], 'item.jpg'));
-    };
-    fetchImage();
-  }, [imageUrl]);
+    if (!isUploaded) {
+      const fetchImage = async () => {
+        const res = await fetch(imageUrl, {
+          method: 'GET',
+          cache: 'no-cache',
+        });
+        const blob = await res.blob();
+        setItemImage(new File([blob], 'item.jpg'));
+      };
+      fetchImage();
+    }
+  }, [imageUrl, isUploaded]);
+
+  function handleModalClose() {
+    setModalOpen(false);
+    setData([]);
+    setGeneratedTerms('');
+  }
 
   async function handleWhereToBuy() {
-    if (!itemImage) {
+    if (!itemImage && !isUploaded) {
       console.error('No image available to upload');
       return;
     }
-
+    setModalOpen(true);
     const formData = new FormData();
-    formData.append('file', itemImage);
-    formData.append('category', item.category);
+    if (!isUploaded) {
+      formData.append('file', itemImage!);
+      formData.append('category', item!.category);
+    } else {
+      const base64Image = sessionStorage.getItem('Image') || '';
+      const imageBlob = await fetch(base64Image).then((r) => r.blob());
+      const imageFile = new File([imageBlob], 'uploaded-item.jpg', {
+        type: 'image/jpeg',
+      });
+      formData.append('file', imageFile);
+      formData.append('category', '');
+    }
 
+    setIsLoading(true);
     const res = await fetch('http://localhost:8000/scrap', {
       method: 'POST',
       body: formData,
     });
     const json = await res.json();
-    setData(Array.isArray(json.results) ? json.results : []);
-    setModalOpen(true);
+
+    setData(Array.isArray(json[0].results) ? json[0].results : []);
+    setGeneratedTerms(json[1]);
+    setIsLoading(false);
   }
 
   return (
@@ -50,70 +76,85 @@ export default function ItemCard({ item }: ItemCardProps) {
       <div className='group h-[420px] w-72 transform overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl'>
         <div className='relative h-64 w-full overflow-hidden'>
           <img
-            src={imageUrl}
-            alt={item.keywords}
+            src={!isUploaded ? imageUrl : sessionStorage.getItem('Image') || ''}
             className='h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-110'
           />
           <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
         </div>
         <div className='flex h-[156px] flex-col justify-between p-5'>
           <div>
-            <h3 className='mb-2 text-lg font-semibold text-gray-800'>
-              {item.category}
+            <h3 className='text-lg font-semibold text-gray-800'>
+              {!isUploaded ? item!.category : 'Tu prenda'}
             </h3>
-            <p className='mb-3 line-clamp-2 text-sm text-gray-600'>
-              {item.keywords}
-            </p>
+            {!isUploaded && (
+              <p className='mb-3 line-clamp-2 text-sm text-gray-600'>
+                {item!.keywords}
+              </p>
+            )}
           </div>
           <Button text='Donde comprar' onClick={handleWhereToBuy} />
         </div>
       </div>
       <ModalTrendo
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleModalClose}
         title='Resultados de Trendo'
       >
-        {data && (
-          <div className='grid grid-cols-2 gap-6'>
-            {data.map((trendo, index) => (
-              <div
-                key={index}
-                className='mb-4 flex flex-col items-center rounded-lg border bg-white p-3 shadow-sm'
-              >
-                <div className='grid grid-cols-2'>
-                  <img
-                    src={trendo.image_url}
-                    alt={trendo.image_alt}
-                    className='mb-2 h-28 w-28 rounded border object-cover'
-                  />
-                  <div className='w-full flex-1 text-center'>
-                    <a
-                      href={trendo.link}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='block text-base font-semibold hover:text-blue-700'
-                    >
-                      {trendo.title}
-                    </a>
-                    <div className='text-sm text-gray-600'>{trendo.brand}</div>
-                    <div className='text-sm font-bold text-green-600'>
-                      {trendo.price}
+        {isLoading ? (
+          <div className='flex h-full items-center justify-center'>
+            <ClipLoader color='#000000' size={50} />
+          </div>
+        ) : (
+          <>
+            <h3 className='mb-6 text-center font-bold text-gray-700'>
+              Términos de búsqueda:{' '}
+              <span className='bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent italic'>
+                {generatedTerms}
+              </span>
+            </h3>
+            <div className='grid grid-cols-2 gap-6'>
+              {data.map((trendo, index) => (
+                <div
+                  key={index}
+                  className='mb-4 flex flex-col items-center rounded-lg border bg-white p-3 shadow-sm'
+                >
+                  <div className='grid grid-cols-2'>
+                    <img
+                      src={trendo.image_url}
+                      alt={trendo.image_alt}
+                      className='mb-2 h-28 w-28 rounded border object-cover'
+                    />
+                    <div className='w-full flex-1 text-center'>
+                      <a
+                        href={trendo.link}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='block text-base font-semibold hover:text-blue-700'
+                      >
+                        {trendo.title}
+                      </a>
+                      <div className='text-sm text-gray-600'>
+                        {trendo.brand}
+                      </div>
+                      <div className='text-sm font-bold text-green-600'>
+                        {trendo.price}
+                      </div>
+                      {trendo.price_old && (
+                        <div className='text-xs text-gray-400 line-through'>
+                          {trendo.price_old}
+                        </div>
+                      )}
+                      {trendo.discount && (
+                        <div className='text-xs font-semibold text-red-500'>
+                          {trendo.discount}
+                        </div>
+                      )}
                     </div>
-                    {trendo.price_old && (
-                      <div className='text-xs text-gray-400 line-through'>
-                        {trendo.price_old}
-                      </div>
-                    )}
-                    {trendo.discount && (
-                      <div className='text-xs font-semibold text-red-500'>
-                        {trendo.discount}
-                      </div>
-                    )}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </ModalTrendo>
     </>

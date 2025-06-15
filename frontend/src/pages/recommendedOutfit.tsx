@@ -66,16 +66,12 @@ export default function RecommendedOutfit() {
           className='m-8'
           onClick={handleNextSuggestion}
         />
-        <img
-          src={sessionStorage.getItem('Image') || ''}
-          alt='Uploaded'
-          className='h-96 w-72 rounded-lg border-2 border-gray-400 shadow-md'
-        />
+        <ItemCard isUploaded={true} />
       </div>
       <div className='grid grid-cols-3 justify-items-center gap-6 p-5'>
         {items.map((item, index) => (
           <div key={index}>
-            <ItemCard item={item} />
+            <ItemCard item={item} isUploaded={false} />
           </div>
         ))}
       </div>

@@ -54,7 +54,7 @@ async def scrap_endpoint(file: UploadFile, category: str = Form(...), n: int = 1
     with ThreadPoolExecutor() as executor:
         result = await loop.run_in_executor(executor, scrape_trendo, search_terms, n)
     
-    return result
+    return [result, search_terms]
 
 # =========================================================================
 # Script direct execution

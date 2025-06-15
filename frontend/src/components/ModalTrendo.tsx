@@ -23,7 +23,7 @@ export default function ModalTrendo({
   }, []);
   return (
     <div
-      className='modal-dialog fixed inset-0 z-50 flex h-[calc(100%-1rem)] max-h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto bg-white/10 backdrop-blur-sm'
+      className='modal-dialog fixed inset-0 z-50 flex h-screen w-full items-center justify-center overflow-x-hidden overflow-y-auto bg-white/10 backdrop-blur-sm'
       aria-modal='true'
       role='dialog'
       tabIndex={-1}

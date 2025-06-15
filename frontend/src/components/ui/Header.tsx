@@ -6,7 +6,13 @@ export default function Header() {
     <header className='header'>
       <div className='header-content'>
         <h1 className='w-full text-center'>
-          <Link to='/' className='no-style-link'>
+          <Link
+            to='/'
+            className='no-style-link'
+            onClick={() => {
+              sessionStorage.clear();
+            }}
+          >
             Dress Me
           </Link>
         </h1>

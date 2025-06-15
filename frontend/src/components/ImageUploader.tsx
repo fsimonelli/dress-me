@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ItemDTO from '../types/ItemDTO';
 import Button from './ui/Button';
-import LoadingIndicator from './ui/LoadingIndicator';
+import { ClipLoader } from 'react-spinners';
 
 export default function ImageUploader() {
   const navigate = useNavigate();
@@ -196,7 +196,7 @@ export default function ImageUploader() {
             />
             {isLoading && (
               <div className='absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm'>
-                <LoadingIndicator />
+                <ClipLoader color='#000000' size={50} />
               </div>
             )}
           </div>
