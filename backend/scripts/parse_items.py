@@ -4,15 +4,12 @@ from unidecode import unidecode
 
 train = open("backend/data/polyvore_data/train_no_dup.json")
 valid = open("backend/data/polyvore_data/valid_no_dup.json")
-test = open("backend/data/polyvore_data/test_no_dup.json")
 train_json = json.load(train)
 valid_json = json.load(valid)
-test_json = json.load(test)
 train.close()
 valid.close()
-test.close()
 
-data = train_json + valid_json + test_json
+data = train_json + valid_json
 d = {}
 with open("backend/data/polyvore_data/clothing_categories.txt") as cat:
     for line in cat:
