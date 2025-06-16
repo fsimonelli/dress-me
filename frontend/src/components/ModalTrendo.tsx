@@ -14,13 +14,20 @@ export default function ModalTrendo({
   children,
   title,
 }: ModalTrendoProps) {
-  if (!isOpen) return null;
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, []);
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+  
   return (
     <div
       className='modal-dialog fixed inset-0 z-50 flex h-screen w-full items-center justify-center overflow-x-hidden overflow-y-auto bg-white/10 backdrop-blur-sm'
