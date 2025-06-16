@@ -115,7 +115,7 @@ export default function ItemCard({ item, isUploaded }: ItemCardProps) {
             </h3>
             <div className='grid grid-cols-2 gap-6'>
               {data.map((trendo, index) => (
-                <TrendoCard key={index} trendo={trendo} />
+                <TrendoCard index={index} trendo={trendo} />
               ))}
             </div>
           </>

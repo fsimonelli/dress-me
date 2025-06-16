@@ -2,11 +2,11 @@ import React from 'react';
 import TrendoDTO from '../types/TrendoDTO';
 
 interface TrendoCardProps {
-  key: number;
+  index: number;
   trendo: TrendoDTO;
 }
 
-export default function TrendoCard({ key, trendo }: TrendoCardProps) {
+export default function TrendoCard({ index, trendo }: TrendoCardProps) {
   return (
     <a
       href={trendo.link}
@@ -15,7 +15,7 @@ export default function TrendoCard({ key, trendo }: TrendoCardProps) {
       className='block transition-transform hover:scale-105'
     >
       <div
-        key={key}
+        key={index}
         className='mb-4 flex flex-col items-center rounded-lg bg-white p-3 shadow-2xl'
       >
         <div className='grid grid-cols-2'>
