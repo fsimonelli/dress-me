@@ -75,11 +75,6 @@ export default function RecommendedOutfit() {
     <>
       <Header />
       <div className='flex flex-col items-center'>
-        <Button
-          text='Siguiente sugerencia'
-          className='m-8'
-          onClick={handleNextSuggestion}
-        />
         <div className='mb-4 flex flex-row items-center gap-8 rounded-lg bg-white p-4 shadow-sm'>
           <ItemCard isUploaded={true} />
           <div className='flex flex-col items-center'>
@@ -95,6 +90,11 @@ export default function RecommendedOutfit() {
             <ItemCard item={currentSimilarItem} isUploaded={false} />
           )}
         </div>
+        <Button
+          text='Siguiente sugerencia'
+          className='m-8'
+          onClick={handleNextSuggestion}
+        />
       </div>
       <div className='grid grid-cols-4 justify-items-center gap-6 p-5'>
         {items.map((item, index) => (
