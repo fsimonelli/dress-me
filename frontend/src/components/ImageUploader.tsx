@@ -170,7 +170,7 @@ export default function ImageUploader() {
                 isDragging ? 'text-blue-400' : 'text-gray-400'
               }`}
             >
-              PNG, JPG
+              PNG, JPG, WEBP
             </p>
           </div>
           <div className='mt-6'>

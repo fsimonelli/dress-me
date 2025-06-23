@@ -82,7 +82,7 @@ export default function RecommendedOutfit() {
             <p className='rounded-lg bg-white px-4 py-2 text-lg font-semibold shadow-sm'>
               Puntuación:{' '}
               <span className='text-blue-600'>
-                {Math.round(currentScore * 100)}%
+                {(currentScore * 100).toFixed(1)}%
               </span>
             </p>
           </div>
